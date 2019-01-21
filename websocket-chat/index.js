@@ -3,49 +3,33 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.get('/', function(req, res){
-
   res.sendFile(__dirname + '/index.html');
-
 });
 
-
-var user_count = 0;
-var users = [];
-io.on('connection', function(socket){
+unames=[];
+user_count=0;
+io.on('connection',function(socket) {
   user_count++;
-  console.log('a user connected');
-  console.log(user_count + ' People Watching');
+  console.log('user connected (' + user_count + ')');
 
-  io.emit('watchers', user_count);
+  socket.on('setUname', function(data) {
+    console.log('requested uname: ', data.uname)
 
-  socket.on('setUsername', function(uname){
-    console.log(uname + ' was requested');
-
-    if(users.indexOf(uname) > -1) {
-      console.log(uname + ' bad');
-      socket.emit('usernamebad', 'Username is taken!');
-    } else {
-      console.log(uname + ' ok');
-      users.push(uname);
-      socket.emit('usernameok', uname);
-    }
-
+    unames.push(data.uname);
+    socket.emit('unameAck', {uname: data.uname});
   });
 
-  socket.on('msg', function(data){
-    console.log('msg-' + data.uname);
+  socket.on('submitMsg', function(msg) {
+    console.log('heard a msg:', msg.uname, msg.msg)
 
-    io.emit('msg', data);
-  });
-
-  socket.on('disconnect', function(){
-    user_count--;
-    console.log('user disconnected');
-    console.log(user_count + ' People Watching');
+    io.emit('publishMsg', msg);
   });
 
 });
 
 
 
-http.listen(3000, function(){ console.log('listening on *:3000'); });
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});

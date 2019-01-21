@@ -1,74 +1,48 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+   <head>
+      <title>Hello world</title>
+   </head>
 
-  <head>
-    <title>Porn Chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 50%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-  </head>
+   <script src="/socket.io/socket.io.js"></script>   
+   <script>
+      var socket = io();
 
-  <body>
-
-    <div id="error-container"></div>
-
-    <div id="user-counter"></div>
-
-    <div id="chatbox">
-      <input id="uname-field" value="" placeholder="Enter a username!">
-      <button id="uname-button" onclick="setUsername()">Go!</button>
-    </div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-  
-        var socket = io();
-        var user;
-  
-        function setUsername() {
-           socket.emit('setUsername', document.getElementById('uname-field').value);
-        };
-  
-        socket.on('usernamebad', function(data) {
-           document.getElementById('error-container').innerHTML = data;
-        });
-  
-        socket.on('usernameok', function(data) {
-           user = data;
-           socket.emit('msg', {uname: user, msg: 'connected!'})
-           $('#chatbox').replaceWith("<div id='chatbox'><ul id='messages'></ul><form id='input' action=''><input id='m' autocomplete='off' /><button>Send</button></form></div")
-        });
-  
-        socket.on('watchers', function(data) {
-          $('#user-counter').text(data + ' People Watching');
-        });
-  
-        $(function () {
-  
-          $('#input').submit(function(e){
-            e.preventDefault(); // prevents page reloading
-            socket.emit('msg', {uname: user, msg: $('#m').val()});
-            $('#m').val('');
-            return false;
-          });
-  
-          socket.on('msg', function(data){
-            $('#messages').append($('<li>').text(data.uname + ': '  + data.msg));
-          });
-  
-        });
-  
-    </script>
+      var uname;
+      function setUname() {
+        socket.emit('setUname', {uname: document.getElementById('name').value});
+      };
+      socket.on('unameAck', function(data) {
+        uname=data.uname;
+        document.getElementById('input-container').innerHTML = '\
+          <input type="text" id="msg">\
+          <button type="button" onclick="sendMsg()">Send</button>';
+      });
+      function sendMsg() {
+         var msg = document.getElementById('msg').value;
+         if(msg) {
+            socket.emit('submitMsg', {uname: uname, msg: msg});
+         }
+      }
+      socket.on('publishMsg', function(data) {
+        document.getElementById('message-container').innerHTML += '\
+          <div><b>' + data.uname + '</b>: ' + data.msg + '</div>'
+      });
+   </script>
 
 
-  </body>
+
+
+
+
+
+
+   <body>
+     <div id="message-container" style='height:100px;'></div>
+     <div id="input-container" style='height:9%'>
+       <input id="name" type="text" value="" placeholder="Choose a username!">
+       <button type="button" onclick="setUname()">Submit</button>
+     </div>
+   </body>
 
 </html>

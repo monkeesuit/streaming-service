@@ -3,6 +3,56 @@
   <head>
     <title>Video Player</title>
     <style>
+      .myButton {
+	-moz-box-shadow: 0px 0px 0px 2px #9fb4f2;
+	-webkit-box-shadow: 0px 0px 0px 2px #9fb4f2;
+	box-shadow: 0px 0px 0px 2px #9fb4f2;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e));
+	background:-moz-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-webkit-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-o-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-ms-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7892c2', endColorstr='#476e9e',GradientType=0);
+	background-color:#7892c2;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:1px;
+	border:1px solid #4e6096;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:6px;
+	padding:2px 2px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #283966;
+        margin-left:2px;
+        margin-right:2px;
+      }
+      .myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #476e9e), color-stop(1, #7892c2));
+	background:-moz-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-webkit-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-o-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-ms-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#476e9e', endColorstr='#7892c2',GradientType=0);
+	background-color:#476e9e;
+      }
+      .myButton:active {
+	position:relative;
+	top:1px;
+      }
+
+      #banner {
+        width:1000px;
+        height:125px;
+        background-color: green;
+        float:left;
+        font-family: "Arial Black", Gadget, sans-serif;
+        font-size: 10px;
+      }
       #content {
         width:1000px;
         height:1000px;
@@ -17,10 +67,22 @@
         float:left;
       }
       #chat-container {
-        width:480px;
+        width:360px;
         height:500px;
         border:1px solid red;
         float:right;
+      }
+      #ad-container {
+        width:120px;
+        height:500px;
+        border:1px solid blue;
+        float:right;
+      }
+      #tag {
+        float: right;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-right: 10px;
       }
     </style>
   </head>
@@ -28,11 +90,27 @@
   <body>
       <script src="hls.js"></script>
 
+      <div id="banner">
+      <div id="logo">
+        <img id="logo" src="logo.svg" width="100">
+        <h2 id="tag">Get your jerk on!</h2>
+      </div>
+      <div id="buttons">
+        <a href="#" class="myButton">Women</a>
+        <a href="#" class="myButton">Men</a>
+        <a href="#" class="myButton">Couples</a>
+      </div>
+      </div>
+
       <div id="content">
 
         <div id="video-container">
             <h1 align="center">Video</h1>
             <video width="480" id="video" preload controls></video>
+        </div>
+
+        <div id="ad-container">
+          <img src=ad.gif></img>
         </div>
 
         <div id="chat-container">
